@@ -21,13 +21,182 @@
             d3.csv("data.csv", function(error, data) {
 
             if (error) {  //If error is not null, something went wrong.
-                console.log("Error no data");  //Logs
+                console.log("Error no data!");  //Logs
             } else {      //If no error, the file loaded correctly. Yay
                 dataset = data;
+                console.log("Found the data!");
+
+               
+                function avgSpent(paperType) {
+                    var total = 0;
+                    total = totalSpent(paperType) / numberOfJobs(paperType);
+
+                    return total.toFixed(2);
+
+                }
+
+                function totalSpent(paperType) {
+
+                    var total = 0;
+                    for (i=0;i<data.length;i++) {
+
+                        if (data[i].JobType == paperType) {
+                            //console.log("value:" + parseFloat(data[i].Pricewithtax) );
+                            total = parseFloat(data[i].Pricewithtax) + total;
+
+
+                            } else {
+
+                          }
+
+                 }
+                    
+                   // console.log("Total Spent on " + paperType + ": " + total.toFixed(2));
+                return total.toFixed(2);
+                }
+
+                function numberOfJobs(paperType) {
+
+                    var total = 0;
+                    for (i=0;i<data.length;i++) {
+
+                        if (data[i].JobType == paperType && data[i].Status != "Cancelled: no UNI") {
+                                     //console.log("value:" + parseFloat(data[i].Pricewithtax) );
+                            total = 1 + total;
+
+
+                            } else {
+
+                          }
+
+                 }
+                    
+                                    // console.log("Total Spent on " + paperType + ": " + total.toFixed(2));
+                return total.toFixed(2);
+                }
+
                 
 
+                    //Calculates the amount spent on each paper type
+                    var hWTotalSpent = totalSpent("Heavyweight Bond");
+                    var lWTotalSpent = totalSpent("Lightweight Bond");
+                    var mTotalSpent = totalSpent("Mylar");
+                    var sGTotalSpent = totalSpent("Satin \"Semi\" Gloss");
+
+                                     //console.log(heavyWeightTotalSpent);
+
+                    //Calculates the number of jobs for each type of paper
+                    var heavyWeightTotalJobs = numberOfJobs("Heavyweight Bond");
+
+                    var hWAverage = avgSpent("Heavyweight Bond");
+                    var lWAverage = avgSpent("Lightweight Bond");
+                    var mAverage = avgSpent("Mylar");
+                    var sGAverage = avgSpent("Satin \"Semi\" Gloss");           
 
 
+
+                    console.log(hWAverage);
+                    console.log(lWAverage);
+                    console.log(mAverage);
+                    console.log(sGAverage);
+
+                    var uniName = [];
+                    var uniCount = [];
+                    var prev;
+
+                    for (i=0;i<data.length;i++){
+
+                        if (data[i].UNI != "" && data[i].UNI != "????") {
+                            uniName.push(data[i].UNI);
+                            uniCount.push(0);
+
+                        } else {
+
+
+                        }
+                    }
+
+                    for (i=0;i<uniName.length;i++){
+
+                        for (j=0;j<uniName.length;j++){
+
+                            //console.log(uniName[i]);
+                            //console.log(uniName[j]);
+
+                        if (uniName[i] == uniName[j]) {
+
+                            uniCount[i]= uniCount[i] + 1;
+                            //console.log(uniCount[i]); 
+
+                        } else {
+
+
+
+                        }
+
+                        }
+
+
+                    }
+
+                        console.log(uniName[8] + " appears " + uniCount[8] + " times");
+
+
+                var totalMoney = 0;
+
+                for (i=0;i<data.length;i++) {
+
+                    if (parseFloat(data[i].Pricewithtax) > 0){
+
+                       totalMoney = parseFloat(data[i].Pricewithtax) + totalMoney;
+                        //console.log("value:" + parseFloat(data[i].Pricewithtax) );
+                        //console.log("Total Money:" + totalMoney);
+                        //console.log("Length:" + data.length);
+                        } else {
+
+                        }
+                }
+
+                                    //console.log("Total Money:" + totalMoney.toFixed(2));
+
+                    var mostNumberOfJobs = [];
+
+
+                
+                    var highestNumber = Math.max.apply(Math,uniCount);
+
+                    for (i=0;i<uniName.length;i++) {
+                        
+                        if (uniCount[i] == highestNumber && uniName[i] != mostNumberOfJobs[i]) {
+
+
+
+
+                            mostNumberOfJobs.push(uniName[i]);
+
+                            console.log(uniName[i]);
+
+
+                        
+
+                        } else {
+
+
+                        }
+
+
+
+                    }
+                    console.log(mostNumberOfJobs);
+
+                                    
+                    
+
+
+                
+
+                
+                
                };
             })
       
