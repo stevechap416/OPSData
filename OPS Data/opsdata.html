@@ -13,8 +13,8 @@
         <script type="text/javascript">
             
             //Width and height
-            var w = 600;
-            var h = 300;
+            var w = 400;
+            var h = 600;
             
             //Data
             var dataset;
@@ -55,6 +55,54 @@
                 return total.toFixed(2);
                 }
 
+                function paperUsed(paperType) {
+                    var used = 0;
+                    var cost = 0;
+
+                    if (paperType == "Heavyweight Bond") {
+                        cost = 6.53;
+                    } else if (paperType == "Lightweight Bond") {
+                        cost = 4.36;
+                    } else if (paperType == "Mylar") {
+                        cost = 9.80;
+                    } else if (paperType == "Satin \"Semi\" Gloss") {
+                        cost = 9.80;
+                    } else {
+
+                    }
+
+                    used = totalSpent(paperType) / cost;
+
+                    return used;
+                }
+
+                console.log(paperUsed("Heavyweight Bond").toFixed(0) + " Feet Used");
+
+                function totalJobs() {
+                    var totalJobs = 0;
+
+                    for (i=0; i<data.length;i++) {
+
+                        if (data[i].Status != "") {
+                            totalJobs = totalJobs + 1;
+                        } else {
+
+                        }
+
+                    }
+                        return totalJobs;
+                }
+
+                function percentOfJobs(paperType) {
+                    var total = 0;
+                    total = (numberOfJobs(paperType)/totalJobs()) * 100;
+
+                    return total.toFixed(0);
+
+                }  
+
+
+
                 function numberOfJobs(paperType) {
 
                     var total = 0;
@@ -75,7 +123,50 @@
                 return total.toFixed(2);
                 }
 
+                function uniTotalSpent(uniName){
+                    var total =0;
+                    for (i=0;i<data.length;i++){
+                    
+
+                        if (data[i].UNI == uniName){
+
+                            total = parseFloat(data[i].Pricewithtax) + total
+                        } else {
+
+                        }
+
+                        
+                    }
+
+                    return total.toFixed(2);
+                }
                 
+
+                function uniNumberOfJobs(uniName) {
+
+                    var total = 0;
+                    for (i=0;i<data.length;i++) {
+
+                        if (data[i].UNI == uniName && data[i].Status == "Completed") {
+                            total = 1 + total;
+                            
+
+                            } else {
+
+                          }
+
+                 }
+
+                    return total;
+                }
+                    
+
+
+
+
+                    //console.log("Spent: " + uniTotalSpent("scc2159"));
+                    //console.log("On " + uniNumberOfJobs("scc2159") + " jobs!");
+
 
                     //Calculates the amount spent on each paper type
                     var hWTotalSpent = totalSpent("Heavyweight Bond");
@@ -83,7 +174,7 @@
                     var mTotalSpent = totalSpent("Mylar");
                     var sGTotalSpent = totalSpent("Satin \"Semi\" Gloss");
 
-                                     //console.log(heavyWeightTotalSpent);
+                    console.log(hWTotalSpent + " Total Spent on HWB");
 
                     //Calculates the number of jobs for each type of paper
                     var heavyWeightTotalJobs = numberOfJobs("Heavyweight Bond");
@@ -91,10 +182,24 @@
                     var hWAverage = avgSpent("Heavyweight Bond");
                     var lWAverage = avgSpent("Lightweight Bond");
                     var mAverage = avgSpent("Mylar");
-                    var sGAverage = avgSpent("Satin \"Semi\" Gloss");           
+                    var sGAverage = avgSpent("Satin \"Semi\" Gloss");    
+
+                    var hWPercentage = percentOfJobs("Heavyweight Bond");
+                    var lWPercentage = percentOfJobs("Lightweight Bond");
+                    var mPercentage = percentOfJobs("Mylar");
+                    var sGPercentage = percentOfJobs("Satin \"Semi\" Gloss");
+                    var errorPercentage = 100 - mPercentage - sGPercentage - lWPercentage - hWPercentage;
 
 
+                    console.log("Percentages");
+                    console.log(hWPercentage);
+                    console.log(lWPercentage);
+                    console.log(mPercentage);
+                    console.log(sGPercentage);
+                    console.log(errorPercentage);
 
+
+                    console.log("Average cost of job by type:");
                     console.log(hWAverage);
                     console.log(lWAverage);
                     console.log(mAverage);
@@ -159,43 +264,93 @@
 
                                     //console.log("Total Money:" + totalMoney.toFixed(2));
 
-                    var mostNumberOfJobs = [];
-
-
-                
+                    var mostNumberOfJobs = [];               
                     var highestNumber = Math.max.apply(Math,uniCount);
-
+                    var temp = 0; //Place holder
                     for (i=0;i<uniName.length;i++) {
                         
-                        if (uniCount[i] == highestNumber && uniName[i] != mostNumberOfJobs[i]) {
+                        if (uniCount[i] == highestNumber && uniName[i] !== mostNumberOfJobs[temp-1]  && uniName[i] !== mostNumberOfJobs[temp-2] && uniName[i] !== mostNumberOfJobs[temp-3]) {
+
+                                    //Not the best, if there are multiple uni's with the highest it will only select the first three.  Could be good enough?
 
 
-
-
-                            mostNumberOfJobs.push(uniName[i]);
-
-                            console.log(uniName[i]);
-
-
+                            temp = temp + 1;
+                            mostNumberOfJobs.push(uniName[i]);  
                         
-
                         } else {
-
 
                         }
 
-
-
                     }
+                   
+
+                    
                     console.log(mostNumberOfJobs);
 
-                                    
-                    
+                    //First visulization! Woop
 
+
+            var dataz = [hWPercentage,lWPercentage,mPercentage,sGPercentage,errorPercentage];
+            var outerRadius = w / 2;
+            var innerRadius = w / 2.5;
+            var arc = d3.svg.arc()
+                .innerRadius(innerRadius)
+                .outerRadius(outerRadius);
+
+            var pie = d3.layout.pie();
+
+            var color = d3.scale.category10();
+
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+            var arcs = svg.selectAll("g.arc")
+                .data(pie(dataz))
+                .enter()
+                .append("g")
+                .attr("class","arc")
+                .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+
+            arcs.append("path")
+                .attr("fill", function(d, i) {
+                    return color(i);
+                })
+                .attr("d", arc)
+                .attr("opacity",".85");
+            
+            //Labels
+            arcs.append("text")
+                .attr("transform", function(d) {
+                    return "translate(" + arc.centroid(d) + ")";
+                })
+                .attr("text-anchor", "middle")
+                .text(function(d) {
+                    return d.value; })
+                .style("fill","white")
+
+
+
+                //Attempt to make graph
+
+                var dates = [];
+
+                for (i=0; i<date.Date.lenght;i++) {
+
+                    if (date.Date[i] not in dates)
+                }
 
                 
 
-                
+                var scale = d3.scale.linear();
+                    .domain([0,50]);
+                    .range([0,50]);
+
+
+
+
+  
                 
                };
             })
