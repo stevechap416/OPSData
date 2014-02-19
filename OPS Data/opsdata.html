@@ -9,7 +9,6 @@
         </style>
     </head>
     <body>
-      <div class = "tether"></div>
         <script type="text/javascript">
             
             //Width and height
@@ -101,8 +100,6 @@
 
                 }  
 
-
-
                 function numberOfJobs(paperType) {
 
                     var total = 0;
@@ -164,8 +161,8 @@
 
 
 
-                    //console.log("Spent: " + uniTotalSpent("scc2159"));
-                    //console.log("On " + uniNumberOfJobs("scc2159") + " jobs!");
+                    console.log("Spent: " + uniTotalSpent("scc2159"));
+                    console.log("On " + uniNumberOfJobs("scc2159") + " jobs!");
 
 
                     //Calculates the amount spent on each paper type
@@ -173,6 +170,13 @@
                     var lWTotalSpent = totalSpent("Lightweight Bond");
                     var mTotalSpent = totalSpent("Mylar");
                     var sGTotalSpent = totalSpent("Satin \"Semi\" Gloss");
+                    var totalsOfTotals = hWTotalSpent + lWTotalSpent + mTotalSpent + sGTotalSpent;
+
+                    console.log("THISSSSS" + totalsOfTotals);
+                    console.log(hWTotalSpent);
+                    console.log(lWTotalSpent);
+                    console.log(mTotalSpent);
+                    console.log(sGTotalSpent);
 
                     console.log(hWTotalSpent + " Total Spent on HWB");
 
@@ -188,8 +192,17 @@
                     var lWPercentage = percentOfJobs("Lightweight Bond");
                     var mPercentage = percentOfJobs("Mylar");
                     var sGPercentage = percentOfJobs("Satin \"Semi\" Gloss");
-                    var errorPercentage = 100 - mPercentage - sGPercentage - lWPercentage - hWPercentage;
 
+
+                    
+                    var errorPercentage = 100 - mPercentage - sGPercentage - lWPercentage - hWPercentage;
+                    var error2 = 100 - (mPercentage + sGPercentage + lWPercentage + hWPercentage);
+
+
+
+console.log("error 2");
+console.log(error2);
+console.log((mPercentage + sGPercentage + lWPercentage + hWPercentage));
 
                     console.log("Percentages");
                     console.log(hWPercentage);
@@ -220,6 +233,9 @@
 
                         }
                     }
+
+
+
 
                     for (i=0;i<uniName.length;i++){
 
@@ -334,18 +350,18 @@
 
                 //Attempt to make graph
 
-                var dates = [];
+                // var dates = [];
 
-                for (i=0; i<date.Date.lenght;i++) {
+                // for (i=0; i<date.Date.lenght;i++) {
 
-                    if (date.Date[i] not in dates)
-                }
+                //     if (date.Date[i] not in dates)
+                // }
 
                 
 
-                var scale = d3.scale.linear();
-                    .domain([0,50]);
-                    .range([0,50]);
+                // var scale = d3.scale.linear();
+                //     .domain([0,50]);
+                //     .range([0,50]);
 
 
 

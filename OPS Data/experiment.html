@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Array Experiments</title>
+      <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+        <style type="text/css">
+               
+        </style>
+    </head>
+    <body>
+
+    	<script type="text/javascript">
+
+    	 //Data
+            var dataset;
+            d3.csv("data.csv", function(error, data) {
+
+            if (error) {  //If error is not null, something went wrong.
+                console.log("Error no data!");  //Logs
+            } else {      //If no error, the file loaded correctly. Yay
+                dataset = data;
+                console.log("Found the data!");
+            
+
+
+        //Store all data in this array for each papertype
+        var paperTypes = [
+    		{
+    			name: "Heavyweight Bond",
+    			priceWithTax: 6.53,
+                feetInRoll:100,
+    			totalJobCount: 0,
+    			totalPrintCost:0,
+    			avgJobCost:0,
+    			avgPrintSize:0,
+    			percentOfJobs:0,
+    			percentOfMoney:0,
+                feetPrinted:0,
+                rollsPrinted:0,
+    		},
+    		{
+    			name: "Lightweight Bond",
+    			priceWithTax: 4.36,
+                feetInRoll:150,
+    			totalJobCount: 0,
+    			totalPrintCost:0,
+    			avgJobCost:0,
+    			avgPrintSize:0,
+    			percentOfJobs:0,
+    			percentOfMoney:0,
+                feetPrinted:0,
+                rollsPrinted:0,
+    		},
+            {
+                name: "Mylar",
+                priceWithTax: 9.80,
+                feetInRoll:100,
+                totalJobCount: 0,
+                totalPrintCost:0,
+                avgJobCost:0,
+                avgPrintSize:0,
+                percentOfJobs:0,
+                percentOfMoney:0,
+                feetPrinted:0,
+                rollsPrinted:0,
+            },
+            {
+                name: "Satin \"Semi\" Gloss",
+                priceWithTax: 9.80,
+                feetInRoll:100,
+                totalJobCount: 0,
+                totalPrintCost:0,
+                avgJobCost:0,
+                avgPrintSize:0,
+                percentOfJobs:0,
+                percentOfMoney:0,
+                feetPrinted:0,
+                rollsPrinted:0,
+            }
+
+
+    	];
+
+
+        //
+        //
+        //This section computes all the necesarry data for the visulization for each papertype.
+        //
+        //
+
+
+        //Setting Some Total variables that don't belong to a specific type of paper, "global totals"
+        var totalJobs = 0;
+        var totalSpent = 0;
+        var totalFeetPrinted = 0;
+
+
+
+        //TOTAL JOB COUNT FOR OVERALL
+            for (i=0; i<data.length;i++) {
+
+                            if (data[i].Status != "") {
+                                totalJobs = totalJobs + 1;
+                            } else {
+
+                            }
+
+                        }
+                           
+        	
+
+                     console.log(totalJobs);
+                    // console.log(paperTypes.length);
+                    // console.log(paperTypes[1].name);
+
+        //TOTAL JOB COUNT FOR EACH PAPER TYPE
+            for (j=0;j<paperTypes.length; j++){
+                for (i=0; i<totalJobs; i++) {
+
+                            if (data[i].JobType == paperTypes[j].name) {
+                                paperTypes[j].totalJobCount = paperTypes[j].totalJobCount + 1;
+                            } else {
+
+                            }
+
+                        }
+                           
+                    }
+
+                    //console.log(paperTypes[0].totalJobCount);
+
+
+
+        //TOTAL PRINT COST 
+            for (i=0; i<totalJobs; i++) {
+
+                            if (data[i].Status == "Completed")
+                            {
+                                totalSpent = parseFloat(totalSpent) + parseFloat(data[i].Pricewithtax);
+                            } else {
+
+                            }
+
+                        }
+                           
+                    console.log("Total amount spent in the OPS this semester: " + totalSpent.toFixed(2));
+
+
+        //AMOUNT SPENT ON EACH PAPER TYPE
+            for (j=0;j<paperTypes.length;j++){
+
+                for (i=0;i<totalJobs;i++){
+
+                    if (paperTypes[j].name == data[i].JobType && data[i].Status == "Completed")
+                    {
+                        paperTypes[j].totalPrintCost = parseFloat(paperTypes[j].totalPrintCost) + parseFloat(data[i].Pricewithtax);
+                    } else {
+
+                    }
+                }
+
+            }
+
+        //LINEAR FEET OF PRINTS PRINTED PER PAPER TYPE
+            for  (i=0; i<paperTypes.length;i++) {
+                paperTypes[i].feetPrinted = paperTypes[i].totalPrintCost / paperTypes[i].priceWithTax;
+
+                    console.log(paperTypes[i].name + " feet printed this semseter: " + paperTypes[i].feetPrinted.toFixed(0));
+            }
+    
+
+        //LINEAR FEET OF PRINTS PRINTED TOTAL
+            for (i=0; i<paperTypes.length;i++) {
+                totalFeetPrinted = totalFeetPrinted + paperTypes[i].feetPrinted;
+            }
+
+                    console.log(totalFeetPrinted.toFixed(0) + " total feet printed this semester!");
+
+        //NUMBER OF ROLLS OF EACH PAPER TYPE
+            for (i=0; i<paperTypes.length;i++) {
+                paperTypes[i].rollsPrinted =  paperTypes[i].feetPrinted / paperTypes[i].feetInRoll;
+
+                    console.log(paperTypes[i].name + " rolls printed this semester: " + paperTypes[i].rollsPrinted.toFixed(2));
+
+            }
+
+        //AVERAGE JOB COST PER PAPER TYPE
+            for (i=0;i<paperTypes.length;i++) {
+        		paperTypes[i].avgJobCost = paperTypes[i].totalPrintCost / paperTypes[i].totalJobCount;
+
+                    console.log(paperTypes[i].name + " average job cost: " + paperTypes[i].avgJobCost.toFixed(2));
+                        
+            }
+
+        //CALCULATES EACH PAPER TYPES PERCENT OF THE TOTAL JOBS
+            for (i=0; i<paperTypes.length;i++) {
+                paperTypes[i].percentOfJobs = paperTypes[i].totalJobCount / totalJobs;
+
+                    console.log(paperTypes[i].name + " had: " + (paperTypes[i].percentOfJobs * 100).toFixed(0) + "% of jobs.");
+
+            }
+
+        //CALCULATES EACH PAPER TYPES PERCENT OF THE TOTAL SPENT
+            for (i=0; i<paperTypes.length;i++) {
+                paperTypes[i].percentOfMoney = paperTypes[i].totalPrintCost / totalSpent;
+
+                    console.log(paperTypes[i].name + " had: " + (paperTypes[i].percentOfMoney * 100).toFixed(0) + "% of the amount spent at the OPS.")
+
+            }
+
+        //CALCULATES AVERAGE PRINT SIZE PER PAPER TYPE
+            for (i=0; i<paperTypes.length;i++) {
+                paperTypes[i].avgPrintSize = (paperTypes[i].avgJobCost / paperTypes[i].priceWithTax);
+
+                    console.log(paperTypes[i].name + " average print size is: " + paperTypes[i].avgPrintSize.toFixed(0) + " feet");
+
+
+            }
+
+        //console.log(paperTypes[0]);
+
+        //
+        //
+        //ADDING SOME FUNCTIONS FOR LATER PURPOSESSSS, SOME MAY BE REDUNDANT 
+        //
+        //
+
+
+        //DIS ain't working, not sure why.
+        function dailyPaperJobs(papertype, date) {
+                    var total = 0;
+
+                    for (i=0;i<uniqueDates.length;i++) {
+                        
+                        if (uniqueDates[i].date == date) {
+                            total == uniqueDates[i].papertype;
+                            //console.log(uniqueDates[i].lwTotal);
+
+
+                        } else {
+
+                        }
+
+                    }return total;
+
+                    
+                }
+
+        function uniTotalSpent(uniName){
+                    var total = 0;
+                    for (i=0;i<totalJobs;i++){
+                    
+
+                        if (data[i].UNI == uniName){
+
+                            total = parseFloat(data[i].Pricewithtax) + total
+                        } else {
+
+                        }
+
+                        
+                    }
+
+                    return total.toFixed(2);
+                }
+                
+                function uniNumberOfJobs(uniName) {
+
+                    var total = 0;
+                    for (i=0;i<totalJobs;i++) {
+
+                        if (data[i].UNI == uniName && data[i].Status == "Completed") {
+                            total = 1 + total;
+                            
+
+                            } else {
+
+                          }
+
+                 }
+
+                    return total;
+                }
+
+
+        //CALCULATING THE TOP USERS
+            var uniNameTempOnly = [];  //Temp array to get all uni's before filtering them
+            var uniCount = [];         //Keeps track of number of jobs by each uni.
+
+            for (i=0;i<totalJobs;i++){
+
+                            if (data[i].UNI != "" && data[i].UNI != "????") {
+                                uniNameTempOnly.push(data[i].UNI);
+                                uniCount.push(0);
+
+
+                            } else {
+
+
+                            }
+                        }
+
+
+            function onlyUnique(value, index, self) { 
+                    return self.indexOf(value) === index;
+            } 
+
+            var uniqueUniNames = uniNameTempOnly.filter(onlyUnique); //finds unique names
+                    //console.log("Unique Names: " + uniqueUniNames)
+
+            for (i=0;i<uniqueUniNames.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].UNI == uniqueUniNames[i] && data[j].Status == "Completed") {
+                        uniCount[i] = uniCount[i] + 1;
+
+
+                    } else {
+
+                    }
+                }
+            }
+
+            console.log(uniqueUniNames[0] + " had " + uniCount[0] + " completed jobs this semester!");
+            //console.log(uniNumberOfJobs("ek2801")); //Double checking via another method that this is correct
+
+            var topUsers = [];
+            var highestNumberOfJobs = Math.max.apply(Math,uniCount);
+
+            //console.log("The most number of jobs per uni is " + highestNumberOfJobs); //Checking to see highest number of completed jobs
+
+            for (i=0;i<uniqueUniNames.length;i++) {
+
+                if (uniCount[i] == highestNumberOfJobs) {
+                    topUsers.push(uniqueUniNames[i]);
+                } else {
+
+                }
+            }
+            console.log(topUsers);
+
+            //CALCULATING TOTAL JOBS FOR DIFFERENT DAYS
+            var datesTemp = [];
+            var datesTemp2 = [];
+            var uniqueDates = [];
+
+
+            for (i=0;i<totalJobs;i++) { 
+                if (data[i].Date != "") {  //Makes sure to skip over instances without dates, could cause issues
+                    datesTemp.push(data[i].Date); 
+                } else {
+
+                }
+            }
+
+            var datesTemp2 = datesTemp.filter(onlyUnique); //Gets each of the dates
+
+            for (i=0;i<datesTemp2.length;i++) {
+                
+                var obj = {
+                        date: datesTemp2[i],
+                        totalJobs: 0,
+                        hwTotal: 0,
+                        lwTotal: 0,
+                        mTotal: 0,
+                        sgTotal: 0
+                };
+                    uniqueDates.push(obj);
+                }
+
+            for (i=0;i<uniqueDates.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].Status == "Completed" && uniqueDates[i].date == data[j].Date) {
+
+                        uniqueDates[i].totalJobs = uniqueDates[i].totalJobs + 1;
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+            }
+
+
+            //FOR HEAVYWEIGHT
+            for (i=0;i<uniqueDates.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].Status == "Completed" && uniqueDates[i].date == data[j].Date && data[j].JobType == "Heavyweight Bond" ) {
+
+                        uniqueDates[i].hwTotal = uniqueDates[i].hwTotal + 1;
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+            }
+
+            //FOR LIGHTWEIGHT
+            for (i=0;i<uniqueDates.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].Status == "Completed" && uniqueDates[i].date == data[j].Date && data[j].JobType == "Lightweight Bond" ) {
+
+                        uniqueDates[i].lwTotal = uniqueDates[i].lwTotal + 1;
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+            }
+
+            //FOR MYLAR
+            for (i=0;i<uniqueDates.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].Status == "Completed" && uniqueDates[i].date == data[j].Date && data[j].JobType == "Mylar" ) {
+
+                        uniqueDates[i].mTotal = uniqueDates[i].mTotal + 1;
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+            }
+
+            //FOR SATIN - GLOSS
+            for (i=0;i<uniqueDates.length;i++) {
+
+                for (j=0;j<totalJobs;j++) {
+
+                    if (data[j].Status == "Completed" && uniqueDates[i].date == data[j].Date && data[j].JobType == "Satin \"Semi\" Gloss" ) {
+
+                        uniqueDates[i].sgTotal = uniqueDates[i].sgTotal + 1;
+
+
+                    } else {
+
+
+                    }
+
+
+                }
+
+            }
+                console.log(uniqueDates);
+                //console.log(dailyPaperJobs("lwTotal","1/25/14"));
+
+
+                //////////////////////////////////////////// ACTUAL VIZ PART ////////////////////////////////
+
+                //First visulization! Woop
+
+                // var dataz = [];
+
+                // for (i=0;i<paperTypes.length;i++) {
+                    
+                //     var obj = {
+                //         name: paperTypes[i].name,
+                //         percent: ((paperTypes[i].percentOfJobs) * 100).toFixed(0),
+                //         };
+
+                //     dataz.push(obj);
+                //     }
+
+                    
+                //     var error = {
+                //         name: "Error",
+                //         percent: percentage;
+                //     }
+
+                //     dataz.push(error);
+
+                // console.log(dataz);
+            
+            // var outerRadius = w / 2;
+            // var innerRadius = w / 2.5;
+            // var arc = d3.svg.arc()
+            //     .innerRadius(innerRadius)
+            //     .outerRadius(outerRadius);
+
+            // var pie = d3.layout.pie();
+
+            // var color = d3.scale.category10();
+
+            // var svg = d3.select("body")
+            //     .append("svg")
+            //     .attr("width", w)
+            //     .attr("height", h);
+
+            // var arcs = svg.selectAll("g.arc")
+            //     .data(pie(dataz))
+            //     .enter()
+            //     .append("g")
+            //     .attr("class","arc")
+            //     .attr("transform", "translate(" + outerRadius + "," + outerRadius + ")");
+
+            // arcs.append("path")
+            //     .attr("fill", function(d, i) {
+            //         return color(i);
+            //     })
+            //     .attr("d", arc)
+            //     .attr("opacity",".85");
+            
+            // //Labels
+            // arcs.append("text")
+            //     .attr("transform", function(d) {
+            //         return "translate(" + arc.centroid(d) + ")";
+            //     })
+            //     .attr("text-anchor", "middle")
+            //     .text(function(d) {
+            //         return d.value; })
+            //     .style("fill","white")
+
+
+
+}})
+
+
+    	  </script>
+    </body>
+</html>
