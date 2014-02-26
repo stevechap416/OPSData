@@ -536,8 +536,10 @@
                
 
                 var line = d3.svg.line()
-                    .x(function(d)  {
-                        return d.xValue;
+                    .x(function(d,i)  {
+
+                        console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + xScale(i) + ' using our xScale.');
+                        return xScale(i);
                     } )
                     .y(function(d)  {
                         return graphHeight - d.totalJobs * 5;
