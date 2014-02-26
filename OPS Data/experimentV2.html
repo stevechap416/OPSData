@@ -8,7 +8,7 @@
             /* tell the SVG path to be a thin blue line without any area fill */
             path {
                 stroke: steelblue;
-                stroke-width: 1;
+                stroke-width: 1.25;
                 fill: none;
             }
             
@@ -16,8 +16,14 @@
               shape-rendering: crispEdges;
             }
 
+            .area {
+                fill: steelblue;
+                opacity: .3;
+            }
+
             .x.axis line {
               stroke: lightgrey;
+              stroke-opacity: .5;
             }
 
             .x.axis .minor {
@@ -31,10 +37,15 @@
             .y.axis line, .y.axis path {
               fill: none;
               stroke: #000;
+              stroke-width: 0;
+            }
+
+            #lw {
+                stroke: orange;
             }
 
             .tick {
-                font-size: 12px;
+                font-size: 11px;
             }
         </style>
     </head>
@@ -373,6 +384,7 @@
                 }
             }
             console.log(topUsers);
+            console.log(uniTotalSpent(topUsers));
 
             //CALCULATING TOTAL JOBS FOR DIFFERENT DAYS
             var datesTemp = [];
@@ -524,26 +536,19 @@
                 //LINEGRAPH FOR DAILY JOBS
                 var m = [80,80,80,80]; //Margins
 
-                var graphWidth = 1000;
-                var graphHeight = 300;   //Arbitrary values for now
+                var graphWidth = 1200;
+                var graphHeight = 350;   //Arbitrary values for now
+                var mostJobs = d3.max(uniqueDates, function(d) {return d.totalJobs});
 
 
                 var xScale = d3.scale.ordinal()
-                .domain(datesTemp2)
+                .domain(uniqueDates.map(function (d) {return d.date;}))
                 .rangePoints([0,graphWidth]);
 
-                var yScale = d3.scale.linear().domain([0,60]).range([graphHeight,0]);
+                var yScale = d3.scale.linear().domain([0,70]).range([graphHeight,0]);
                
+                
 
-                var line = d3.svg.line()
-                    .x(function(d,i)  {
-
-                        console.log('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + xScale(i) + ' using our xScale.');
-                        return xScale(i);
-                    } )
-                    .y(function(d)  {
-                        return graphHeight - d.totalJobs * 5;
-                    } )
 
                 var testGraph = d3.select("#graph").append("svg:svg")
                     .attr("width", graphWidth + m[1] + m[3])
@@ -560,17 +565,44 @@
                     // Add the x-axis.
                     testGraph.append("svg:g")
                           .attr("class", "x axis")
-                          .attr("transform", "translate(0," + graphHeight + ")")
+                          .attr("transform", "translate(0," + (graphHeight) + ")")
                           .call(xAxis)
                 
-                var yAxisLeft = d3.svg.axis().scale(yScale).orient("left").ticks(60/10);
+                var yAxisLeft = d3.svg.axis().scale(yScale).orient("left").ticks(6);
                     // Add the y-axis to the left
                     testGraph.append("svg:g")
                         .attr("class", "y axis")
                         .attr("transform", "translate(-25,0)")
                         .call(yAxisLeft);
 
+                var line = d3.svg.line()
+                    .x(function(d)  {
+                       return xScale(d.date);
+                    } )
+                    .y(function(d)  {
+                        return graphHeight - d.totalJobs*5;
+                    } )
+
+                var line2 = d3.svg.line()
+                    .x(function(d)  {
+                       return xScale(d.date);
+                    } )
+                    .y(function(d)  {
+                        return graphHeight - d.sgTotal*5;
+                    } )
+
+                var area = d3.svg.area()
+                    .x(function(d) {return xScale(d.date); })
+                    .y0(graphHeight)
+                    .y1(function(d) {return graphHeight - d.totalJobs*5});
+
+                testGraph.append("path")
+                    .datum(uniqueDates)
+                    .attr("class", "area")
+                    .attr("d", area);
+
                 testGraph.append("svg:path").attr("d", line(uniqueDates));
+                //testGraph.append("svg:path").attr("d", line2(uniqueDates)).attr("id","lw");
 
 
 
