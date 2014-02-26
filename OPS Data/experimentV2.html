@@ -5,7 +5,14 @@
         <title>Array Experiments</title>
       <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
         <style type="text/css">
+
+        @font-face { font-family: isocpeur; src: url('isocpeur.ttf'); } 
             /* tell the SVG path to be a thin blue line without any area fill */
+            
+            * {
+                font-size: 100%;
+                font-family: isocpeur;
+            }
             path {
                 stroke: steelblue;
                 stroke-width: 1.25;
@@ -31,13 +38,14 @@
             }
 
             .x.axis path {
-              display: none;
+              stroke: #000;
+              stroke-width: .7;
             }
 
             .y.axis line, .y.axis path {
               fill: none;
               stroke: #000;
-              stroke-width: 0;
+              stroke-width: .7;
             }
 
             #lw {
@@ -50,6 +58,7 @@
         </style>
     </head>
     <body>
+            <h1>OPS</h1>
 
         <div id="graph" class="aGraph" style="position:absolute;top:0px;left:0; float:left;"></div>
 
@@ -537,7 +546,7 @@
                 var m = [80,80,80,80]; //Margins
 
                 var graphWidth = 1200;
-                var graphHeight = 350;   //Arbitrary values for now
+                var graphHeight = 375;   //Arbitrary values for now
                 var mostJobs = d3.max(uniqueDates, function(d) {return d.totalJobs});
 
 
@@ -545,7 +554,7 @@
                 .domain(uniqueDates.map(function (d) {return d.date;}))
                 .rangePoints([0,graphWidth]);
 
-                var yScale = d3.scale.linear().domain([0,70]).range([graphHeight,0]);
+                var yScale = d3.scale.linear().domain([0,75]).range([graphHeight,0]);
                
                 
 
@@ -560,15 +569,23 @@
 
                 var xAxis = d3.svg.axis()
                     .scale(xScale)
-                    .tickSize(-graphHeight)
+                    //.tickSize(-graphHeight)
 
                     // Add the x-axis.
+
+
                     testGraph.append("svg:g")
                           .attr("class", "x axis")
-                          .attr("transform", "translate(0," + (graphHeight) + ")")
+                          .attr("transform", "translate(0," + (graphHeight + 25) + ")")
+
                           .call(xAxis)
                 
-                var yAxisLeft = d3.svg.axis().scale(yScale).orient("left").ticks(6);
+                var yAxisLeft = d3.svg.axis()
+                .scale(yScale)
+                //.tickSize(-graphWidth-25)
+                .orient("left")
+                .tickValues([0,10,25,50,75])
+                //.ticks(6);
                     // Add the y-axis to the left
                     testGraph.append("svg:g")
                         .attr("class", "y axis")
